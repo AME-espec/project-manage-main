@@ -7,6 +7,7 @@ use Auth;
 use \App\Task;
 use \App\User;
 use \App\Project;
+use App\UsersTask;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -22,10 +23,15 @@ class TaskController extends Controller
             return redirect()->route('home');
 
         return view('task.index', [
+            // 'tareas' => DB::table('tareas')
+            //                 ->join('proyectos', 'tareas.id_proyecto', '=', 'proyectos.id_proyecto')
+            //                 ->leftJoin('users', 'tareas.id_empleado', '=', 'users.id')
+            //                 ->select('tareas.*', DB::raw('users.name as empleado'), DB::raw('proyectos.nombre as proyecto'), DB::raw('CAST(tareas.fecha_registro AS DATE) as fecha_registro'))
+            //                 ->where('proyectos.estado', '=', 1)
+            //                 ->get()
             'tareas' => DB::table('tareas')
                             ->join('proyectos', 'tareas.id_proyecto', '=', 'proyectos.id_proyecto')
-                            ->leftJoin('users', 'tareas.id_empleado', '=', 'users.id')
-                            ->select('tareas.*', DB::raw('users.name as empleado'), DB::raw('proyectos.nombre as proyecto'), DB::raw('CAST(tareas.fecha_registro AS DATE) as fecha_registro'))
+                            ->select('tareas.*', DB::raw('proyectos.nombre as proyecto'), DB::raw('CAST(tareas.fecha_registro AS DATE) as fecha_registro'))
                             ->where('proyectos.estado', '=', 1)
                             ->get()
         ]);
@@ -56,21 +62,32 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
+    //    return $request->all();
+        
         if(\Auth::user()->role == 'E')
             return redirect()->route('home');
 
         $task = new Task;
-
         $task->create([
             'id_proyecto' => $request->id_proyecto,
             'descripcion' => $request->descripcion,
             'comentario' => $request->comentario,
-            'id_empleado' => (strlen($request->id_empleado) > 0) ? $request->id_empleado : null,
+            // 'id_empleado' => (strlen($request->id_empleado) > 0) ? $request->id_empleado : null,
             'estatus' => (strlen($request->id_empleado) > 0) ? 'P' : $request->estatus,
             'fecha_inicio' => ($request->id_empleado != '' && is_null($request->fecha_inicio)) ? date('Y-m-d') : $request->fecha_inicio ?? null,
             'fecha_final' => $request->fecha_final ?? null,
             'fecha_limite' => $request->fecha_limite
         ]);
+
+        $last = Task::orderBy('id', 'desc')->first();
+        
+        foreach($request->states as $state){
+            $usersTask = new UsersTask();
+            $usersTask->create([
+                'id_tarea' => $last->id,
+                'user_id' => $state
+            ]);
+        }
 
         return redirect()->route('task.index');
     }
@@ -121,12 +138,24 @@ class TaskController extends Controller
         $task->id_proyecto = $request->id_proyecto;
         $task->descripcion = $request->descripcion;
         $task->comentario = $request->comentario;
-        $task->id_empleado = (strlen($request->id_empleado) > 0) ? $request->id_empleado : null;
+        // $task->id_empleado = (strlen($request->id_empleado) > 0) ? $request->id_empleado : null;
         $task->estatus = (strlen($request->id_empleado) > 0) ? 'P' : $request->estatus;
         $task->fecha_inicio = ($request->id_empleado != '' && is_null($request->fecha_inicio)) ? date('Y-m-d') : $request->fecha_inicio ?? null;
         $task->fecha_final = $request->fecha_final ?? null;
         $task->fecha_limite = $request->fecha_limite;
-        $task->update();        
+        $task->update();      
+        
+        $delete = UsersTask::where('id_tarea', $id)->delete();
+        if($delete){
+            foreach($request->states as $state){
+                $usersTask = new UsersTask();
+                $usersTask->create([
+                    'id_tarea' => $id,
+                    'user_id' => $state
+                ]);
+            }
+        }
+        
 
         return redirect()->route('task.index');
     }

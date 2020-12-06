@@ -15,14 +15,14 @@
 		            </h6>
 		        </div>
 		        <div class="card-body">
-		        	<form action="{{ route('task.update', $tarea->id_tarea) }}" method="POST">
+		        	<form action="{{ route('task.update', $tarea->id) }}" method="POST">
 		        		@csrf
 		        		@method('PUT')
 
 		        		<div class="form-group">
 		        			<label for="id_proyecto">Proyecto: <strong class="text-danger">*</strong></label>
 		        			<select name="id_proyecto" class="form-control" required="">
-		        				<option value="">Seleccionar proyecto...</option>
+		        				<option value="" >Seleccionar proyecto...</option>
 
 		        				@foreach($proyectos as $proyecto)
 		        					<option value="{{ $proyecto->id_proyecto }}" @if($tarea->id_proyecto == $proyecto->id_proyecto) selected="" @endif>{{ $proyecto->nombre }}</option>
@@ -32,11 +32,11 @@
 
 		        		<div class="form-group">
 		        			<label for="id_empleado">Empleado: <small>(opcional)</small></label>
-		        			<select name="id_empleado" class="form-control">
-	        					<option value="">Seleccionar empleado...</option>
-
-		        				@foreach($empleados as $empleado)
-		        					<option value="{{ $empleado->id }}" @if($tarea->id_empleado == $empleado->id) selected="" @endif>{{ $empleado->name }}</option>
+		        			<select class="js-example-basic-multiple form-control" name="states[]" multiple="multiple">
+	        					<!-- <option  disabled="true">Seleccionar empleado...</option> -->
+								@foreach($empleados as $empleado)
+								<?php $temp = \App\UsersTask::OneEmployee($empleado->id); ?>
+		        					<option value="{{ $empleado->id }}" @if($temp) selected="" @endif>{{ $empleado->name }}</option>
 		        				@endforeach
 		        			</select>
 		        		</div>

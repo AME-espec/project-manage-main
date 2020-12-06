@@ -30,9 +30,9 @@
 		        		</div>
 
 		        		<div class="form-group">
-		        			<label for="id_empleado">Empleado: <small>(opcional)</small></label>
-		        			<select name="id_empleado" class="form-control">
-	        					<option value="">Seleccionar empleado...</option>
+		        			<label for="id_empleado">Empleados: <small>(opcional)</small></label>
+							<select class="js-example-basic-multiple form-control" name="states[]" multiple="multiple">
+	        					<!-- <option  value="" disabled="true">Seleccionar empleado...</option> -->
 
 		        				@foreach($empleados as $empleado)
 		        					<option value="{{ $empleado->id }}">{{ $empleado->name }}</option>

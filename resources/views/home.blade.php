@@ -193,14 +193,14 @@
                                             <td>{{ $tarea->fecha_final }}</td>
                                             <td>
                                                 @if($tarea->estatus == 'E')
-                                                    <form action="{{ route('task.take', $tarea->id_tarea) }}" method="POST">
+                                                    <form action="{{ route('task.take', $tarea->id) }}" method="POST">
                                                         @csrf
                                                         <button type="submit" class="btn btn-primary btn-sm">Seleccionar</button>
                                                     </form>
                                                 @endif
 
                                                 @if($tarea->estatus == 'P' AND $tarea->id_empleado == Auth::user()->id)
-                                                    <form action="{{ route('task.end', $tarea->id_tarea) }}" method="POST">
+                                                    <form action="{{ route('task.end', $tarea->id) }}" method="POST">
                                                         @csrf
                                                         <button class="btn btn-success btn-sm">Completar</button>
                                                     </form>

@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('title', 'Tareas')
@@ -24,7 +25,7 @@
 		                            <th>Tarea</th>
 		                            <th>Comentario</th>
 		                            <th>Estado</th>
-		                            <th>Empleado</th>
+		                            <th>Empleados</th>
 		                            <th>Inicio</th>
 		                            <th>Fin</th>
 		                            <th>Límite</th>
@@ -38,7 +39,7 @@
 		                            <th>Tarea</th>
 		                            <th>Comentario</th>
 		                            <th>Estado</th>
-		                            <th>Empleado</th>
+		                            <th>Empleados</th>
 		                            <th>Inicio</th>
 		                            <th>Fin</th>
 		                            <th>Límite</th>
@@ -47,6 +48,7 @@
 		                        </tr>
 		                    </tfoot>
 		                    <tbody>
+								<!-- <?php// print_r($tareas); exit;?> -->
 		                    	@foreach($tareas as $tarea)
 			                        <tr>
 			                            <td>{{ $tarea->proyecto }}</td>
@@ -60,17 +62,20 @@
                                             @else
                                             	<span class="badge badge-success">Terminado</span>
                                             @endif
-			                            </td>
-			                            <td>{{ $tarea->empleado ?? null }}</td>
+										</td>
+										<?php
+											$tmp = \App\UsersTask::employes($tarea->id);
+										?>
+			                            <td>@if($tmp) {{ $tmp }} @else Sin asignaciones @endif </td>
 			                            <td>{{ $tarea->fecha_inicio }}</td>
 			                            <td>{{ $tarea->fecha_final }}</td>
 			                            <td>{{ $tarea->fecha_limite }}</td>
 			                            <td>{{ $tarea->fecha_registro }}</td>
 			                            <td style="display: flex; justify-content: space-around;">
-			                            	<a class="btn btn-info btn-sm" href="{{ route('task.edit', $tarea->id_tarea) }}">Editar</a>
+			                            	<a class="btn btn-info btn-sm" href="{{ route('task.edit', $tarea->id) }}">Editar</a>
 
 			                            	@if($tarea->estado == 1)
-				                            	<form action="{{ route('task.destroy', $tarea->id_tarea) }}" method="POST">
+				                            	<form action="{{ route('task.destroy', $tarea->id) }}" method="POST">
 				                            		@csrf
 				                            		@method('DELETE')
 
@@ -79,10 +84,10 @@
 				                            @endif
 
 				                            @if($tarea->estado == 0)
-				                            	<form action="{{ route('task.restore', $tarea->id_tarea) }}" method="POST">
+				                            	<form action="{{ route('task.restore', $tarea->id) }}" method="POST">
 				                            		@csrf
 
-				                            		<button class="btn btn-success btn-sm">Restaurar</button>
+				                            		 <button style="margin-left:5px;" class="btn btn-success btn-sm"> Restaurar</button>
 				                            	</form>
 				                            @endif
 			                            </td>

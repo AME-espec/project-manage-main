@@ -8,9 +8,9 @@ class Task extends Model
 {
     protected $table = 'tareas';
 
-    protected $primaryKey = 'id_tarea';
+    protected $primaryKey = 'id';
 
-    protected $fillable = ['id_proyecto', 'id_empleado', 'descripcion', 'comentario', 'estatus', 'fecha_inicio', 'fecha_final', 'fecha_limite', 'estado'];
+    protected $fillable = ['id_proyecto', 'descripcion', 'comentario', 'estatus', 'fecha_inicio', 'fecha_final', 'fecha_limite', 'estado'];
 
     public $timestamps = false;
 
@@ -20,10 +20,10 @@ class Task extends Model
     	return $this->belongsTo('App\Project', 'id_proyecto');
     }
 
-    public function employee ()
-    {
-    	return $this->belongsTo('App\User', 'id_empleado');
-    }
+    // public function employee ()
+    // {
+    // 	return $this->belongsTo('App\User', 'id_empleado');
+    // }
 
     public function getEstatusColorAttribute ()
     {
@@ -42,4 +42,5 @@ class Task extends Model
 
         return $fecha->format('Y-m-d');
     }
+
 }

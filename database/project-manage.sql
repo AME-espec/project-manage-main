@@ -81,7 +81,7 @@ INSERT INTO `proyectos` (`id_proyecto`, `id_manager`, `nombre`, `descripcion`, `
 
 -- Volcando estructura para tabla project-manage.tareas
 CREATE TABLE IF NOT EXISTS `tareas` (
-  `id_tarea` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_proyecto` int(11) NOT NULL DEFAULT '0',
   `id_empleado` bigint(20) unsigned DEFAULT NULL,
   `descripcion` varchar(255) NOT NULL,
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `tareas` (
   `fecha_final` date DEFAULT NULL,
   `fecha_limite` date DEFAULT NULL,
   `fecha_registro` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_tarea`),
+  PRIMARY KEY (`id`),
   KEY `id_proyecto` (`id_proyecto`),
   KEY `id_empleado` (`id_empleado`),
   CONSTRAINT `FK1_id_empleado` FOREIGN KEY (`id_empleado`) REFERENCES `users` (`id`),
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `tareas` (
 
 -- Volcando datos para la tabla project-manage.tareas: ~4 rows (aproximadamente)
 /*!40000 ALTER TABLE `tareas` DISABLE KEYS */;
-INSERT INTO `tareas` (`id_tarea`, `id_proyecto`, `id_empleado`, `descripcion`, `comentario`, `estatus`, `estado`, `fecha_inicio`, `fecha_final`, `fecha_limite`, `fecha_registro`) VALUES
+INSERT INTO `tareas` (`id`, `id_proyecto`, `id_empleado`, `descripcion`, `comentario`, `estatus`, `estado`, `fecha_inicio`, `fecha_final`, `fecha_limite`, `fecha_registro`) VALUES
 	(1, 1, 2, 'Desarrollar modulo de registro de clientes upd', 'algunos comentarios de la tarea por aqui up...', 'C', '1', '2020-11-17', '2020-11-19', '2020-11-30', '2020-11-17 15:04:45'),
 	(2, 1, 3, 'Desarrollar modulo de registro de proveedores', 'algunos comentarios de la tarea por aqui... xDDD', 'C', '1', '2020-11-15', '2020-11-18', '2020-11-20', '2020-11-17 15:05:03'),
 	(3, 1, NULL, 'Desarrollar modulo de cotizacion', 'algunos comentarios de la tarea por aqui...', 'E', '1', NULL, NULL, '2020-12-15', '2020-11-17 15:05:18'),
