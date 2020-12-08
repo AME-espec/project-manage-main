@@ -51,7 +51,10 @@
 			                        <tr>
 			                            <td>{{ $progreso->proyecto }}</td>
 			                            <td>{{ $progreso->tarea }}</td>
-			                            <td>{{ $progreso->empleado }}</td>
+										<?php
+											$tmp = \App\UsersTask::employes($progreso->id);
+										?>
+			                            <td>@if($tmp) {{ $tmp }} @else Sin asignaciones @endif </td>
 			                            <td>{{ $progreso->fecha_inicio }}</td>
 			                            <td>{{ $progreso->fecha_final }}</td>
 			                            <td>{{ $progreso->fecha_limite }}</td>

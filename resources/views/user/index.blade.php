@@ -24,7 +24,7 @@
 		                            <th>Correo</th>
 		                            <th>Rol</th>
 		                            <th>Registrado</th>
-		                            {{-- <th>Acciones</th> --}}
+		                             <th>Acciones</th> 
 		                        </tr>
 		                    </thead>
 		                    <tfoot>
@@ -33,7 +33,7 @@
 		                            <th>Correo</th>
 		                            <th>Rol</th>
 		                            <th>Registrado</th>
-		                            {{-- <th>Acciones</th> --}}
+		                            <th>Acciones</th> 
 		                        </tr>
 		                    </tfoot>
 		                    <tbody>
@@ -42,7 +42,12 @@
 			                            <td>{{ $usuario->name }}</td>
 			                            <td>{{ $usuario->email }}</td>
 			                            <td>{{ $usuario->roleDescription }}</td>
-			                            <td>{{ $usuario->created_at }}</td>
+										<td>{{ $usuario->created_at }}</td>
+										<td style="display: flex; justify-content: space-around;">
+										@if($usuario->role == 'E')
+											<a class="btn btn-info btn-sm" href="{{ route('user.profile', $usuario->id) }}">Detalles</a>
+										@endif
+			                            </td>
 			                            {{-- <td style="display: flex; justify-content: space-around;">
 			                            	<a class="btn btn-info btn-sm" href="{{ route('user.edit', $usuario->id) }}">Editar</a>
 

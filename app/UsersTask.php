@@ -34,7 +34,7 @@ class UsersTask extends Model
     public static function employes($id)
     {
         $all = DB::table('users_task')->where('id_tarea', $id)->get();
-        $result = null;$c=0;
+        $result = null; $c=0;
         if($all)
             foreach($all as $a){
                 
@@ -54,9 +54,9 @@ class UsersTask extends Model
         return $result;
     }
 
-    public static function OneEmployee($id){
+    public static function OneEmployee($id,$task){
 
-     $user = \App\UsersTask::where('user_id', '=', $id)->first();
+     $user = \App\UsersTask::where(['user_id' => $id,'id_tarea'=>$task])->first();
         
      return $user;
     }

@@ -10,7 +10,7 @@ class Task extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['id_proyecto', 'descripcion', 'comentario', 'estatus', 'fecha_inicio', 'fecha_final', 'fecha_limite', 'estado'];
+    protected $fillable = ['id_proyecto', 'descripcion', 'comentario', 'estatus', 'fecha_inicio', 'fecha_final', 'fecha_limite', 'estado','completed_by'];
 
     public $timestamps = false;
 

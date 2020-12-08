@@ -35,7 +35,7 @@
 		        			<select class="js-example-basic-multiple form-control" name="states[]" multiple="multiple">
 	        					<!-- <option  disabled="true">Seleccionar empleado...</option> -->
 								@foreach($empleados as $empleado)
-								<?php $temp = \App\UsersTask::OneEmployee($empleado->id); ?>
+								<?php $temp = \App\UsersTask::OneEmployee($empleado->id,$tarea->id); ?>
 		        					<option value="{{ $empleado->id }}" @if($temp) selected="" @endif>{{ $empleado->name }}</option>
 		        				@endforeach
 		        			</select>
@@ -51,13 +51,13 @@
 		        			<textarea name="comentario" class="form-control" required="">{{ $tarea->comentario }}</textarea>
 		        		</div>
 
-		        		<div class="form-group">
+		        		<!-- <div class="form-group">
 		        			<label for="estatus">Estado: <strong class="text-danger">*</strong></label>
 		        			<select name="estatus" class="form-control" required="">
 		        				<option value="E" @if($tarea->estatus == 'E') selected="" @endif>En espera</option>
 		        				<option value="P" @if($tarea->estatus == 'P') selected="" @endif>En proceso</option>
 		        			</select>
-		        		</div>
+		        		</div> -->
 
 		        		<div class="form-group">
 		        			<label for="fecha_inicio">Fecha inicio: <small>(opcional)</small></label>

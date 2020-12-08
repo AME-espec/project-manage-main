@@ -11,12 +11,12 @@
     <title>Login</title>
 <style>
 .marginauto {
-    margin: 10px auto 20px;
+    margin: 15px auto 10px;
     display: block;
 }
 </style>
 	<div>
-    <img class="marginauto" src="https://cdn.discordapp.com/attachments/770645680975904768/779480626888704010/tmto.png" alt="centered image" width="450" height="450" />
+    <img class="marginauto" src="https://cdn.discordapp.com/attachments/770645680975904768/779480626888704010/tmto.png" alt="centered image" width="250" height="250" />
 </div>
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -36,7 +36,7 @@
         <!-- Outer Row -->
         <div class="row justify-content-center">
 
-            <div class="col-md-6 mt-5">
+            <div class="col-md-6 ">
 
                 <div class="card o-hidden border-0 shadow-lg my-5">
                     <div class="card-body p-0">

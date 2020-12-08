@@ -50,13 +50,13 @@
 		        			<textarea name="comentario" class="form-control" required=""></textarea>
 		        		</div>
 
-		        		<div class="form-group">
+		        		<!-- <div class="form-group">
 		        			<label for="estatus">Estado: <strong class="text-danger">*</strong></label>
 		        			<select name="estatus" class="form-control" required="">
 		        				<option value="E">En espera</option>
 		        				<option value="P">En proceso</option>
 		        			</select>
-		        		</div>
+		        		</div> -->
 
 		        		<div class="form-group">
 		        			<label for="fecha_inicio">Fecha inicio: <strong class="text-danger">*</strong> </label>

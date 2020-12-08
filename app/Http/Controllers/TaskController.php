@@ -32,7 +32,12 @@ class TaskController extends Controller
             'tareas' => DB::table('tareas')
                             ->join('proyectos', 'tareas.id_proyecto', '=', 'proyectos.id_proyecto')
                             ->select('tareas.*', DB::raw('proyectos.nombre as proyecto'), DB::raw('CAST(tareas.fecha_registro AS DATE) as fecha_registro'))
-                            ->where('proyectos.estado', '=', 1)
+                            ->where(['proyectos.estado' => 1, 'tareas.estado' => '1'])
+                            ->get(),
+            'tareas_eliminadas' => DB::table('tareas')
+                            ->join('proyectos', 'tareas.id_proyecto', '=', 'proyectos.id_proyecto')
+                            ->select('tareas.*', DB::raw('proyectos.nombre as proyecto'), DB::raw('CAST(tareas.fecha_registro AS DATE) as fecha_registro'))
+                            ->where(['proyectos.estado' => 1,'tareas.estado' => '0'])
                             ->get()
         ]);
     }
@@ -73,7 +78,7 @@ class TaskController extends Controller
             'descripcion' => $request->descripcion,
             'comentario' => $request->comentario,
             // 'id_empleado' => (strlen($request->id_empleado) > 0) ? $request->id_empleado : null,
-            'estatus' => (strlen($request->id_empleado) > 0) ? 'P' : $request->estatus,
+            'estatus' => (empty($request->states)  ? 'E' : 'P'),
             'fecha_inicio' => ($request->id_empleado != '' && is_null($request->fecha_inicio)) ? date('Y-m-d') : $request->fecha_inicio ?? null,
             'fecha_final' => $request->fecha_final ?? null,
             'fecha_limite' => $request->fecha_limite
@@ -81,12 +86,14 @@ class TaskController extends Controller
 
         $last = Task::orderBy('id', 'desc')->first();
         
-        foreach($request->states as $state){
-            $usersTask = new UsersTask();
-            $usersTask->create([
+        if (!empty($request->states)) {
+            foreach ($request->states as $state) {
+                $usersTask = new UsersTask();
+                $usersTask->create([
                 'id_tarea' => $last->id,
                 'user_id' => $state
             ]);
+            }
         }
 
         return redirect()->route('task.index');
@@ -134,27 +141,29 @@ class TaskController extends Controller
             return redirect()->route('home');
 
         $task = Task::find($id);
-
+        $val_usr =  UsersTask::where('id_tarea', $id)->count();
         $task->id_proyecto = $request->id_proyecto;
         $task->descripcion = $request->descripcion;
         $task->comentario = $request->comentario;
         // $task->id_empleado = (strlen($request->id_empleado) > 0) ? $request->id_empleado : null;
-        $task->estatus = (strlen($request->id_empleado) > 0) ? 'P' : $request->estatus;
+        $task->estatus = (empty($request->states || $val_usr < 1 )  ? 'E' : 'P');
         $task->fecha_inicio = ($request->id_empleado != '' && is_null($request->fecha_inicio)) ? date('Y-m-d') : $request->fecha_inicio ?? null;
         $task->fecha_final = $request->fecha_final ?? null;
         $task->fecha_limite = $request->fecha_limite;
         $task->update();      
         
-        $delete = UsersTask::where('id_tarea', $id)->delete();
-        if($delete){
-            foreach($request->states as $state){
+        // return  $request->states;
+            UsersTask::where('id_tarea', $id)->delete();
+        if (!empty($request->states)) {
+            foreach ($request->states as $state) {
                 $usersTask = new UsersTask();
                 $usersTask->create([
                     'id_tarea' => $id,
-                    'user_id' => $state
+                    'user_id' => (int) $state
                 ]);
             }
         }
+        
         
 
         return redirect()->route('task.index');
@@ -207,9 +216,12 @@ class TaskController extends Controller
     public function endTask ($id)
     {
         $task = Task::find($id);
+        $user_id = \Auth::user()->id;
 
         $task->estatus = 'C';
+        $task->completed_by = $user_id;
         $task->fecha_final = date('Y-m-d');
+
         $task->update();
 
         return redirect()->route('home');
@@ -223,9 +235,9 @@ class TaskController extends Controller
         return view('task.progress', [
             'progresos' => DB::select("
                 SELECT
-                    u.name AS empleado,
                     p.nombre AS proyecto,
                     t.descripcion AS tarea,
+                    t.id,
                     t.fecha_inicio,
                     t.fecha_final,
                     t.fecha_limite,
@@ -243,8 +255,7 @@ class TaskController extends Controller
                     tareas AS t
                         INNER JOIN
                     proyectos AS p ON t.id_proyecto = p.id_proyecto
-                        INNER JOIN
-                    users AS u ON t.id_empleado = u.id
+                       
                 WHERE
                     t.estatus = 'C'
                 ;
